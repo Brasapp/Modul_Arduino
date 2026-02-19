@@ -1,304 +1,192 @@
-Berikut konten README.md siap pakai, fokus murni koding Arduino, dengan contoh kode konkret. Bisa langsung kamu taruh di repo GitHub.
-
 # Arduino Coding Module (Software-Oriented)
 
 Modul ini ditujukan untuk programmer yang **sudah paham coding**, tetapi **baru masuk ke Arduino / embedded**.  
 Fokus utama: **pola koding yang benar, non-blocking, modular, dan scalable**.
 
-Board contoh: Arduino Uno  
-Bahasa: C++ (Arduino)
+**Board**: Arduino Uno | **Bahasa**: C++ (Arduino) | **Versi**: 1.0
 
 ---
 
-## Target Pembelajaran
+## 🎯 Target Pembelajaran
 
 Setelah menyelesaikan modul ini, peserta mampu:
-- Menulis kode Arduino tanpa `delay()`
-- Membuat loop multitasking sederhana
-- Menggunakan state machine
-- Membuat interface berbasis Serial
-- Menulis kode modular dan maintainable
+- ✅ Menulis kode Arduino **tanpa `delay()`**
+- ✅ Membuat **loop multitasking** sederhana
+- ✅ Mengimplementasikan **state machine**
+- ✅ Membuat **interface berbasis Serial**
+- ✅ Menulis kode **modular dan maintainable**
 
 ---
 
-## Struktur Proyek
+## 📁 Struktur Proyek
 
-
-arduino-coding-module/
+```
+Modul_Arduino/
 ├── README.md
-├── basic/
-│   ├── 01_structure.ino
-│   ├── 02_non_blocking.ino
-│   └── 03_state_machine.ino
-├── input/
-│   ├── 04_button_event.ino
-├── serial/
-│   ├── 05_serial_command.ino
-├── project/
-│   └── 06_mini_project.ino
+├── basic/                    # Konsep dasar
+│   ├── 01_structure.ino         → Lifecycle setup() & loop()
+│   ├── 02_non_blocking.ino      → Timing tanpa delay()
+│   └── 03_state_machine.ino     → FSM sederhana
+├── input/                    # Input handling
+│   └── 04_button_event.ino      → Edge detection & debounce
+├── serial/                   # Communication
+│   └── 05_serial_command.ino    → Command parsing
+└── project/                  # Mini project
+    └── 06_mini_project.ino      → Kombinasi semua konsep
+```
 
 ---
 
-## 1. Struktur Program Arduino
+## 📚 Modul Pembelajaran
 
-File: `basic/01_structure.ino`
+### **1️⃣ Struktur Program Arduino** | [basic/01_structure.ino](basic/01_structure.ino)
 
+**Target**: Memahami lifecycle `setup()` dan `loop()`
+
+**Konsep Kunci**:
+- `setup()` → dijalankan **sekali** saat startup
+- `loop()` → dijalankan **berulang** tanpa batas
+- Inisialisasi hardware & variable di `setup()`
+- Logic utama di `loop()`
+
+---
+
+### **2️⃣ Non-Blocking Timing** | [basic/02_non_blocking.ino](basic/02_non_blocking.ino)
+
+**Target**: Timing akurat **tanpa `delay()`** - semua task berjalan parallel
+
+**Prinsip Utama**:
+- Semua task berjalan di loop yang sama
+- Tidak ada blocking dengan `delay()`
+- Cek kondisi dengan `millis()` untuk eksekusi periodik
+- Scalable untuk multi-tasking
+
+**Pattern**:
 ```cpp
-void setup() {
-  Serial.begin(9600);
-  Serial.println("System init");
-}
-
-void loop() {
-  Serial.println("Loop running");
-  delay(1000); // hanya untuk demo lifecycle
-}
-
-Tujuan:
-
-
-Memahami lifecycle setup() dan loop()
-
-
-
-2. Non-Blocking Timing (Tanpa delay)
-File: basic/02_non_blocking.ino
-const uint8_t LED_PIN = 13;
-unsigned long lastToggle = 0;
+unsigned long lastTime = 0;
 const unsigned long interval = 1000;
-bool ledState = false;
 
-void setup() {
-  pinMode(LED_PIN, OUTPUT);
+if (millis() - lastTime >= interval) {
+  lastTime = millis();
+  // do task
 }
-
-void loop() {
-  unsigned long now = millis();
-
-  if (now - lastToggle >= interval) {
-    lastToggle = now;
-    ledState = !ledState;
-    digitalWrite(LED_PIN, ledState);
-  }
-
-  // task lain bisa jalan di sini
-}
-
-Prinsip:
-
-
-Semua task berjalan paralel
-
-
-Tidak ada blocking
-
-
-
-3. State Machine Dasar
-File: basic/03_state_machine.ino
-enum State {
-  IDLE,
-  RUNNING,
-  ERROR
-};
-
-State currentState = IDLE;
-
-void setup() {
-  Serial.begin(9600);
-}
-
-void loop() {
-  switch (currentState) {
-    case IDLE:
-      Serial.println("IDLE");
-      currentState = RUNNING;
-      break;
-
-    case RUNNING:
-      Serial.println("RUNNING");
-      currentState = ERROR;
-      break;
-
-    case ERROR:
-      Serial.println("ERROR");
-      currentState = IDLE;
-      break;
-  }
-
-  delay(1000); // hanya untuk visualisasi state
-}
-
-Konsep:
-
-
-Alur program eksplisit
-
-
-Mudah dikembangkan
-
-
-
-4. Button sebagai Event (Debounce Non-Blocking)
-File: input/04_button_event.ino
-const uint8_t BUTTON_PIN = 2;
-bool lastState = HIGH;
-
-void setup() {
-  pinMode(BUTTON_PIN, INPUT_PULLUP);
-  Serial.begin(9600);
-}
-
-void loop() {
-  bool currentState = digitalRead(BUTTON_PIN);
-
-  if (lastState == HIGH && currentState == LOW) {
-    Serial.println("Button Pressed");
-  }
-
-  lastState = currentState;
-}
-
-Fokus:
-
-
-Edge detection
-
-
-Event-based input
-
-
-
-5. Serial Command Interface
-File: serial/05_serial_command.ino
-String cmd;
-
-void setup() {
-  Serial.begin(9600);
-}
-
-void loop() {
-  while (Serial.available()) {
-    char c = Serial.read();
-    if (c == '\n') {
-      processCommand(cmd);
-      cmd = "";
-    } else {
-      cmd += c;
-    }
-  }
-}
-
-void processCommand(String command) {
-  if (command == "LED_ON") {
-    Serial.println("LED ON command received");
-  } else if (command == "LED_OFF") {
-    Serial.println("LED OFF command received");
-  } else {
-    Serial.println("Unknown command");
-  }
-}
-
-Catatan:
-
-
-Untuk proyek besar, hindari String
-
-
-Gunakan char buffer[] di level lanjut
-
-
-
-6. Mini Project: Multi-Task Loop Controller
-File: project/06_mini_project.ino
-unsigned long tBlink = 0;
-unsigned long tLog = 0;
-
-void setup() {
-  Serial.begin(9600);
-  pinMode(13, OUTPUT);
-}
-
-void loop() {
-  unsigned long now = millis();
-
-  if (now - tBlink >= 500) {
-    tBlink = now;
-    digitalWrite(13, !digitalRead(13));
-  }
-
-  if (now - tLog >= 2000) {
-    tLog = now;
-    Serial.println("System alive");
-  }
-
-  handleSerial();
-}
-
-void handleSerial() {
-  if (Serial.available()) {
-    Serial.println("Command received");
-    Serial.read();
-  }
-}
-
-Kriteria lulus:
-
-
-Tidak ada delay()
-
-
-Semua task berjalan bersamaan
-
-
-Kode mudah dibaca
-
-
-
-Coding Rules (WAJIB)
-
-
-❌ delay() di project utama
-
-
-❌ logic di loop() yang panjang
-
-
-✅ fungsi kecil & jelas
-
-
-✅ state machine untuk mode
-
-
-✅ timing berbasis millis()
-
-
-
-Next Step (Opsional)
-
-
-Interrupt
-
-
-Timer
-
-
-UART protocol
-
-
-Migrasi ke non-Arduino C++
-
-
-
-Platform
-Powered by Arduino
+```
 
 ---
 
-Kalau mau, langkah berikutnya paling optimal:
-- pisahkan jadi **repo template**
-- buatin **branch latihan & solusi**
-- konversi ke **Arduino Nano / ESP32**
-- atau bikin **versi strict (tanpa `String`, tanpa delay sama sekali)**
+### **3️⃣ State Machine Dasar** | [basic/03_state_machine.ino](basic/03_state_machine.ino)
 
-Tinggal bilang target akhirnya.
+**Target**: Alur program yang **eksplisit & mudah dikembangkan**
+
+**Konsep Kunci**:
+- Gunakan `enum` untuk state yang jelas
+- Transition state dalam `switch/case`
+- Setiap state punya behavior spesifik
+- Mudah di-debug dan di-extend
+
+**Keuntungan**:
+- ✅ Alur logic yang terlihat jelas
+- ✅ Mudah menambah state baru
+- ✅ Prevents spaghetti logic
+
+---
+
+### **4️⃣ Button Event Detection** | [input/04_button_event.ino](input/04_button_event.ino)
+
+**Target**: Input handling dengan **edge detection** & **debounce non-blocking**
+
+**Teknik**:
+- **Edge detection**: Deteksi perubahan state (HIGH→LOW, LOW→HIGH)
+- **Debounce implisit**: Loop rate alami memberikan debounce
+- **Event-based input**: Reaksi pada event, bukan polling kontinyu
+- **Non-blocking**: Tidak menghentikan task lain
+
+---
+
+### **5️⃣ Serial Command Interface** | [serial/05_serial_command.ino](serial/05_serial_command.ino)
+
+**Target**: Menerima & memproses command via **Serial (non-blocking)**
+
+**Fitur**:
+- Command parsing dengan delimiter (`\n`)
+- Response ke host
+- Fleksibel untuk command expansion
+- Cocok untuk debugging & kontrol real-time
+
+**Testing**: Gunakan Serial Monitor (Arduino IDE)
+```
+Input:  LED_ON
+Input:  LED_OFF
+Input:  STATUS
+```
+
+**Progress**: Advanced version gunakan `char buffer[]` (avoid `String` di production)
+
+---
+
+### **6️⃣ Mini Project: Multi-Task Controller** | [project/06_mini_project.ino](project/06_mini_project.ino)
+
+**Target**: **Kombinasi semua konsep** → multiple non-blocking tasks
+
+**Spesifikasi**:
+- LED toggle setiap 500ms (non-blocking)
+- System log setiap 2 detik
+- Serial command handler
+- **Zero `delay()` di main loop**
+
+**Kriteria Kelulusan** ✅:
+- Semua task berjalan bersamaan
+- Tidak ada `delay()` di `loop()` utama
+- Kode mudah dibaca & maintainable
+- Mudah menambah task baru
+
+---
+
+## ⚠️ Coding Rules (WAJIB)
+
+### ❌ **Jangan Lakukan**:
+- `delay()` di main loop (kecuali edge case sangat khusus)
+- Logic panjang & kompleks langsung di `loop()`
+- Hard-coded magic number tanpa konstan
+- Mixed blocking & non-blocking code
+
+### ✅ **Lakukan**:
+- Timing berbasis `millis()`
+- Fungsi kecil & jelas dengan nama deskriptif
+- State machine untuk multi-mode behavior
+- Struktur code yang modular
+- Dokumentasi di atas setiap function
+
+---
+
+## 🚀 Next Steps (Opsional)
+
+### Level Berikutnya:
+- [ ] **Interrupt handling** → Timer interrupt untuk precise timing
+- [ ] **UART protocol** → Advanced serial communication
+- [ ] **Strict version** → Tanpa `String`, tanpa `delay` sama sekali
+- [ ] **Board lain** → Arduino Nano, Arduino Pro Mini, ESP32
+
+### Project Ideas:
+- [ ] Simple datalogger
+- [ ] Temperature controller
+- [ ] Servo controller dengan feedback
+- [ ] Multi-sensor reader
+
+---
+
+## 📖 Referensi
+
+- [Arduino Official Reference](https://www.arduino.cc/reference/en/)
+- [millis() Documentation](https://www.arduino.cc/reference/en/language/functions/time/millis/)
+- [Non-blocking timing pattern](https://learn.adafruit.com/multi-tasking-the-arduino-part-1)
+
+---
+
+## 📝 Lisensi
+
+Open source - Feel free to use & modify for learning
+
+---
+
+**Versi**: 1.0 | **Last Updated**: Feb 2026

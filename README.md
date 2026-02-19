@@ -1,13 +1,10 @@
 # Arduino Coding Module (Software-Oriented)
 
-Modul ini ditujukan untuk programmer yang **sudah paham coding**, tetapi **baru masuk ke Arduino / embedded**.  
-Fokus utama: **pola koding yang benar, non-blocking, modular, dan scalable**.
-
 **Board**: Arduino Uno | **Bahasa**: C++ (Arduino) | **Versi**: 1.0
 
 ---
 
-## 🎯 Target Pembelajaran
+## Target Pembelajaran
 
 Setelah menyelesaikan modul ini, peserta mampu:
 - ✅ Menulis kode Arduino **tanpa `delay()`**
@@ -18,7 +15,7 @@ Setelah menyelesaikan modul ini, peserta mampu:
 
 ---
 
-## 📁 Struktur Proyek
+## Struktur Proyek
 
 ```
 Modul_Arduino/
@@ -37,7 +34,7 @@ Modul_Arduino/
 
 ---
 
-## 📚 Modul Pembelajaran
+## Modul Pembelajaran
 
 ### **1️⃣ Struktur Program Arduino** | [basic/01_structure.ino](basic/01_structure.ino)
 
@@ -85,9 +82,9 @@ if (millis() - lastTime >= interval) {
 - Mudah di-debug dan di-extend
 
 **Keuntungan**:
-- ✅ Alur logic yang terlihat jelas
-- ✅ Mudah menambah state baru
-- ✅ Prevents spaghetti logic
+- Alur logic yang terlihat jelas
+- Mudah menambah state baru
+- Prevents spaghetti logic
 
 ---
 
@@ -124,33 +121,15 @@ Input:  STATUS
 
 ---
 
-### **6️⃣ Mini Project: Multi-Task Controller** | [project/06_mini_project.ino](project/06_mini_project.ino)
-
-**Target**: **Kombinasi semua konsep** → multiple non-blocking tasks
-
-**Spesifikasi**:
-- LED toggle setiap 500ms (non-blocking)
-- System log setiap 2 detik
-- Serial command handler
-- **Zero `delay()` di main loop**
-
-**Kriteria Kelulusan** ✅:
-- Semua task berjalan bersamaan
-- Tidak ada `delay()` di `loop()` utama
-- Kode mudah dibaca & maintainable
-- Mudah menambah task baru
-
----
-
 ## ⚠️ Coding Rules (WAJIB)
 
-### ❌ **Jangan Lakukan**:
+### **Jangan Lakukan**:
 - `delay()` di main loop (kecuali edge case sangat khusus)
 - Logic panjang & kompleks langsung di `loop()`
 - Hard-coded magic number tanpa konstan
 - Mixed blocking & non-blocking code
 
-### ✅ **Lakukan**:
+### **Lakukan**:
 - Timing berbasis `millis()`
 - Fungsi kecil & jelas dengan nama deskriptif
 - State machine untuk multi-mode behavior
@@ -159,23 +138,7 @@ Input:  STATUS
 
 ---
 
-## 🚀 Next Steps (Opsional)
-
-### Level Berikutnya:
-- [ ] **Interrupt handling** → Timer interrupt untuk precise timing
-- [ ] **UART protocol** → Advanced serial communication
-- [ ] **Strict version** → Tanpa `String`, tanpa `delay` sama sekali
-- [ ] **Board lain** → Arduino Nano, Arduino Pro Mini, ESP32
-
-### Project Ideas:
-- [ ] Simple datalogger
-- [ ] Temperature controller
-- [ ] Servo controller dengan feedback
-- [ ] Multi-sensor reader
-
----
-
-## 📖 Referensi
+## Referensi
 
 - [Arduino Official Reference](https://www.arduino.cc/reference/en/)
 - [millis() Documentation](https://www.arduino.cc/reference/en/language/functions/time/millis/)
@@ -183,10 +146,3 @@ Input:  STATUS
 
 ---
 
-## 📝 Lisensi
-
-Open source - Feel free to use & modify for learning
-
----
-
-**Versi**: 1.0 | **Last Updated**: Feb 2026

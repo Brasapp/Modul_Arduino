@@ -26,10 +26,8 @@ Modul_Arduino/
 │   └── 03_state_machine.ino     → FSM sederhana
 ├── input/                    # Input handling
 │   └── 04_button_event.ino      → Edge detection & debounce
-├── serial/                   # Communication
-│   └── 05_serial_command.ino    → Command parsing
-└── project/                  # Mini project
-    └── 06_mini_project.ino      → Kombinasi semua konsep
+└── serial/                   # Communication
+    └── 05_serial_command.ino    → Command parsing
 ```
 
 ---

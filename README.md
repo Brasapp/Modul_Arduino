@@ -180,14 +180,11 @@ Untuk menjalankan project Wokwi di VS Code, Anda membutuhkan:
 ### Struktur Folder Project
 
 ```
-my_arduino_project/
-├── README.md              (Opsional - Penjelasan project)
-├── sketch.ino             (Wajib - Kode Arduino utama)
-├── diagram.json           (Wajib - Diagram komponen dan koneksi)
-└── libraries/             (Opsional - Library eksternal)
-    └── library_name/
-        ├── library.cpp
-        └── library.h
+Project_Arduino/
+├── diagram.json                 # Diagram Wokwi
+├── sketch.ino                   # Variasi Project
+└── wokwi.toml                   # Konfigurasi project Wokwi
+
 ```
 
 ### 1. **sketch.ino** (File Utama)
@@ -225,25 +222,8 @@ File JSON yang mendefinisikan:
     [ "led1:C", "uno:GND", "black", [ "v0" ] ]
   ]
 }
+
 ```
-
-### 3. **wokwi.toml** (Opsional tapi Recommended)
-Konfigurasi project Wokwi:
-```toml
-[wokwi]
-version = 1
-author = "Your Name"
-title = "My Arduino Project"
-description = "Description of your project"
-
-[build]
-firmware = "sketch.ino"
-
-[env]
-SIMULATED = "1"
-```
-
----
 
 ## Mini Project: LED Berkedip
 
@@ -300,7 +280,7 @@ void loop() {
 }
 ```
 
-### Cara Menjalankan di Wokwi:
+### Cara Menjalankan di Wokwi VS Code:
 
 1. **Buat folder project:**
    ```bash
@@ -308,54 +288,14 @@ void loop() {
    cd my_first_arduino
    ```
 
-2. **Buat file `sketch.ino`** dengan isi kode di atas
+2. **Buat file `sketch.ino`** 
 
-3. **Buat file `diagram.json`** (lihat di folder project ini)
+3. **Buat file `diagram.json`**
 
 4. **Di VS Code:**
    - Buka folder project
    - Tekan `Ctrl+Shift+P`
    - Ketik: "Wokwi: Start Simulator"
-   - Simulator akan membuka dan LED akan berkedip!
-
-5. **Untuk melihat Serial Output:**
-   - Di Wokwi simulator, buka icon Serial Monitor atau "Serial" di preview
-   - Serial akan menampilkan "LED: ON" dan "LED: OFF"
-
-### Output yang Diharapkan:
-```
-Program Blink dimulai!
-LED: ON
-LED: OFF
-LED: ON
-LED: OFF
-... (terus berulang)
-```
-
----
-
-## Konsep Penting yang Dipelajari
-
-Dari mini project ini, Anda telah belajar:
-
-1. Struktur program Arduino (setup & loop)
-2. Deklarasi PIN dan mode (`pinMode`)
-3. Kontrol digital output (`digitalWrite`)
-4. Timing (delay) (`delay`)
-5. Serial communication (`Serial.print`)
-6. Koneksi dasar (PIN ke LED ke GND)
-
----
-
-## Langkah Selanjutnya
-
-Setelah paham LED berkedip, coba:
-
-1. **Modifikasi timing** - Ubah delay() menjadi 500ms atau 2000ms
-2. **Sensor Suara (Buzzer)** - Ganti LED dengan buzzer untuk output suara
-3. **Push Button** - Tambahkan button untuk control LED manual
-4. **Sensor Analog** - Gunakan sensor cahaya atau suhu
-5. **Motor DC** - Kontrol kecepatan motor dengan PWM
 
 ---
 

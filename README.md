@@ -1,305 +1,370 @@
-# 📚 Modul Pembelajaran Arduino - Complete Guide
+# Modul Pengenalan Koding Arduino
 
-Selamat datang di modul pembelajaran Arduino untuk developer yang sudah mengerti basic programming!
+Selamat datang di modul pengenalan Arduino! Modul ini dirancang untuk pemula yang ingin belajar mikrokontroler Arduino melalui praktik langsung di **Wokwi** - simulator Arduino online.
 
-## 📁 Struktur Folder
-
-```
-Modul_Arduino/
-├── 1_ARDUINO_BASICS.md              ← Mulai dari sini! Konsep & struktur
-├── WOKWI_TUTORIAL.md                ← Cara setup & gunakan Wokwi simulator
-├── README.md                         ← File ini
-│
-├── 2_EXAMPLE_CODES/                 ← Contoh code nyata + penjelasan
-│   ├── 1_LED_Blink_Timer.ino
-│   ├── 2_Button_Debounce.ino
-│   ├── 3_Analog_Sensor_LDR.ino
-│   ├── 4_Servo_Control.ino
-│   └── 5_Serial_StateMachine.ino
-│
-└── 3_WOKWI_PROJECTS/               ← Siap pakai di Wokwi simulator
-    ├── 1_LED_Blink_Timer_diagram.json
-    ├── 2_Button_Debounce_diagram.json
-    ├── 3_Analog_Sensor_diagram.json
-    └── 4_Servo_Control_diagram.json
-```
+## Daftar Isi
+1. [Tentang Arduino](#tentang-arduino)
+2. [Setup & Tools](#setup--tools)
+3. [Struktur Program Arduino](#struktur-program-arduino)
+4. [Menghubungkan Komponen](#menghubungkan-komponen)
+5. [File-File yang Dibutuhkan](#file-file-yang-dibutuhkan)
+6. [Mini Project: LED Berkedip](#mini-project-led-berkedip)
 
 ---
 
-## 🚀 Quick Start - 3 Langkah
+## Tentang Arduino
 
-### Langkah 1: Pahami Konsep
-📖 Buka: **`1_ARDUINO_BASICS.md`**
-- Pelajari pengertian setup() vs loop()
-- Pahami digital vs analog pins
-- Review best practices
+Arduino adalah platform open-source untuk membuat prototipe elektronik. Terdiri dari:
+- **Hardware**: Board mikrokontroler (Arduino Uno, Nano, Mega, dll)
+- **Software**: IDE atau editor untuk menulis kode
 
-**Waktu:** 15-20 menit
-
-### Langkah 2: Lihat & Pahami Contoh Code
-📝 Buka salah satu file di **`2_EXAMPLE_CODES/`**
-- Setiap file memiliki:
-  - ✅ Penjelasan hardware yang dibutuhkan
-  - ✅ Inline comments detail
-  - ✅ Penjelasan konsep penting
-  - ✅ Eksperimen saran di akhir
-
-**Rekomendasi urutan:**
-1. `1_LED_Blink_Timer.ino` (dasar timer non-blocking)
-2. `2_Button_Debounce.ino` (input handling)
-3. `3_Analog_Sensor_LDR.ino` (analog reading & PWM)
-4. `4_Servo_Control.ino` (library usage)
-5. `5_Serial_StateMachine.ino` (komunikasi & state machine)
-
-**Waktu:** 10 menit per file
-
-### Langkah 3: Test dengan Wokwi
-🎮 Buka file `.json` di **`3_WOKWI_PROJECTS/`**
-- Tidak perlu hardware fisik
-- Simulasi langsung di VS Code
-- Test code sebelum ke hardware real
-
-**Cara menggunakan:**
-1. Install extension: Wokwi Simulator di VS Code
-2. Buka folder `Modul_Arduino` di VS Code
-3. Buka file `diagram.json` dari `3_WOKWI_PROJECTS/`
-4. Click tombol "Play" untuk simulasi
-5. Lihat hasil di serial monitor
-
-**Waktu:** 5 menit per project
+Keuntungan Arduino:
+- Mudah dipelajari (bahasa mirip C/C++)
+- Open-source dan gratis
+- Komunitas besar dengan banyak tutorial
+- Bisa digunakan untuk berbagai project IoT, robotika, dll
 
 ---
 
-## 📊 Learning Path
+## Setup & Tools
 
-### Untuk Pemula (belum paham Arduino)
+### 1. Install VS Code Extension: Wokwi for VS Code
 
-```
-1. Baca: 1_ARDUINO_BASICS.md (section 1-3: struktur & pin)
-2. Code: 2_EXAMPLE_CODES/1_LED_Blink_Timer.ino
-3. Test: 3_WOKWI_PROJECTS/1_LED_Blink_Timer_diagram.json
-   ↓
-4. Baca: 1_ARDUINO_BASICS.md (section 4-5: serial & timing)
-5. Code: 2_EXAMPLE_CODES/2_Button_Debounce.ino
-6. Test: 3_WOKWI_PROJECTS/2_Button_Debounce_diagram.json
-   ↓
-7. Baca: 1_ARDUINO_BASICS.md (section 9: debugging)
-8. Eksperimen: Modifikasi kode sendiri
-```
+Wokwi adalah simulator Arduino yang memungkinkan Anda berlatih tanpa hardware fisik.
 
-**Total waktu:** 2-3 jam
+**Langkah Instalasi:**
 
----
+1. Buka VS Code
+2. Pergi ke **Extensions** (Ctrl+Shift+X)
+3. Cari **"Wokwi for VS Code"** oleh Wokwi
+4. Klik **Install**
+5. Restart VS Code jika perlu
 
-### Untuk Intermediate (paham C/C++)
 
-```
-1. Skim: 1_ARDUINO_BASICS.md (focus: concepts yang unfamiliar)
-2. Study: Semua di 2_EXAMPLE_CODES/ sekaligus
-3. Hands-on: Modify & extend Wokwi projects
-4. Challenge: Buat project kombinasi sendiri
-```
 
-**Total waktu:** 1-2 jam
+**Cara Menggunakan:**
+- Buka folder project Arduino Anda
+- Letakkan file `diagram.json` dan `sketch.ino` di folder project
+- Tekan **Ctrl+Shift+P** → ketik "Wokwi: Start Simulator"
+- Simulator akan terbuka di preview panel
 
 ---
 
-## 💡 Konsep Kunci yang Perlu Dikuasai
+## Struktur Program Arduino
 
-### 1. Non-Blocking Timing (⭐ PENTING)
+Setiap program Arduino memiliki struktur dasar yang sama:
+
 ```cpp
-// ❌ JANGAN:
-delay(1000);  // Program "freeze" selama 1 detik
+// 1. DEKLARASI & SETUP (Berjalan sekali saat startup)
+void setup() {
+  // Inisialisasi pin, serial communication, dll
+  Serial.begin(9600);        // Mulai komunikasi serial
+  pinMode(LED_PIN, OUTPUT);  // Set pin sebagai output
+  pinMode(BUTTON_PIN, INPUT); // Set pin sebagai input
+}
 
-// ✅ PAKAI:
-if (millis() - lastTime >= 1000) {
-  lastTime = millis();
-  // aksi di sini
+// 2. LOOP (Berjalan terus-menerus)
+void loop() {
+  // Kode utama yang akan diulang
+  digitalWrite(LED_PIN, HIGH);  // Nyalakan LED
+  delay(1000);                  // Tunggu 1 detik
+  digitalWrite(LED_PIN, LOW);   // Matikan LED
+  delay(1000);                  // Tunggu 1 detik
 }
 ```
-**Penjelasan:** Program tetap responsif untuk baca input atau aksi lain
 
-Lihat: `1_LED_Blink_Timer.ino`
+### Penjelasan Fungsi Penting:
+
+| Fungsi | Kegunaan | Contoh |
+|--------|----------|---------|
+| `pinMode(pin, mode)` | Set pin sebagai INPUT/OUTPUT | `pinMode(13, OUTPUT)` |
+| `digitalWrite(pin, value)` | Set pin HIGH/LOW (digital) | `digitalWrite(13, HIGH)` |
+| `digitalRead(pin)` | Baca nilai pin (HIGH/LOW) | `int state = digitalRead(2)` |
+| `analogRead(pin)` | Baca nilai analog (0-1023) | `int value = analogRead(A0)` |
+| `analogWrite(pin, value)` | PWM output (0-255) | `analogWrite(5, 128)` |
+| `delay(ms)` | Tunggu (milliseconds) | `delay(500)` |
+| `Serial.print()` | Print ke serial monitor | `Serial.print("Halo")` |
 
 ---
 
-### 2. Debouncing Button Input
+## Menghubungkan Komponen
+
+### Pin Arduino Uno
+
+```
+POWER & GROUND (Wajib):
+┌─────────────────────┐
+│   Arduino Uno       │
+│ GND ← Ground (Bumi) │
+│ 5V  ← Power 5 Volt  │
+│ 3V3 ← Power 3.3V    │
+└─────────────────────┘
+```
+
+### Aturan Koneksi Umum
+
+#### 1. **LED (Light Emitting Diode)**
+```
+LED memiliki 2 kaki:
+- Kaki panjang (+) → GPIO Pin (misal pin 13)
+- Kaki pendek (-) → 220Ω Resistor → GND
+
+Diagram:
+5V Pin ──[220Ω Resistor]── LED (+) [LED (-)] ── GND
+```
+
+#### 2. **Push Button**
+```
+Button (saklar) memiliki 4 kaki yang terhubung 2 pasang.
+
+Diagram:
+5V ──[Button]── GPIO Pin (misal pin 2)
+                GPIO Pin ──[10kΩ Pull-down Resistor]── GND
+                
+Catatan: Pull-down resistor membuat pin stabil saat button tidak ditekan
+```
+
+#### 3. **Buzzer (Pembaca Suara)**
+```
+Buzzer aktif (dengan ±):
+- Kaki (+) → GPIO Pin (misal pin 9)
+- Kaki (-) → GND
+```
+
+#### 4. **Sensor (umumnya)**
+```
+Sensor 3 kaki:
+- VCC → 5V (atau 3.3V)
+- GND → GND
+- DATA/OUT → GPIO Pin (misal A0 untuk analog)
+```
+
+### Tabel Referensi Cepat: Pin Arduino Uno
+
+```
+        ┌─────────────┐
+    3V3 │1           │ Reset
+    5V  │2           │ GND
+    GND │3           │ Vin
+Analog: │4           │ D0 (RX)
+  A0-A5 │5           │ D1 (TX)
+        │6           │ D2
+Digital:│7           │ D3 (PWM)
+  D2-D13│8           │ D4
+        │9           │ D5 (PWM)
+    GND │10          │ D6 (PWM)
+        │11          │ D7
+        │12          │ D8
+        │13 (LED)    │ D9 (PWM)
+        │14          │ D10 (PWM)
+        │15          │ D11 (PWM)
+        │16          │ D12
+        │17          │ D13 (LED)
+        │18          │ GND
+        │19          │ Vin
+        └─────────────┘
+```
+
+**Catatan Penting:**
+- GND harus terhubung ke ground semua komponen
+- VCC harus terhubung ke power (5V atau 3.3V)
+- Resistor untuk LED selalu digunakan (220Ω-470Ω) untuk proteksi
+- Pull-down resistor untuk button (10kΩ)
+
+---
+
+## File-File yang Dibutuhkan
+
+Untuk menjalankan project Wokwi di VS Code, Anda membutuhkan:
+
+### Struktur Folder Project
+
+```
+my_arduino_project/
+├── README.md              (Opsional - Penjelasan project)
+├── sketch.ino             (Wajib - Kode Arduino utama)
+├── diagram.json           (Wajib - Diagram komponen dan koneksi)
+└── libraries/             (Opsional - Library eksternal)
+    └── library_name/
+        ├── library.cpp
+        └── library.h
+```
+
+### 1. **sketch.ino** (File Utama)
+File yang berisi kode Arduino Anda. Wokwi secara otomatis mencari file dengan ekstension `.ino`.
+
+### 2. **diagram.json** (Wajib)
+File JSON yang mendefinisikan:
+- Komponen apa saja yang digunakan
+- Di mana tiap komponen ditempatkan di breadboard virtual
+- Bagaimana komponen terhubung (wiring)
+
+**Contoh struktur diagram.json:**
+```json
+{
+  "version": 1,
+  "author": "Your Name",
+  "parts": [
+    {
+      "type": "wokwi-arduino-uno",
+      "id": "uno",
+      "top": 200,
+      "left": 50,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": 200,
+      "left": 300,
+      "attrs": { "color": "red" }
+    }
+  ],
+  "connections": [
+    [ "uno:13", "led1:A", "red", [ "h6" ] ],
+    [ "led1:C", "uno:GND", "black", [ "v0" ] ]
+  ]
+}
+```
+
+### 3. **wokwi.toml** (Opsional tapi Recommended)
+Konfigurasi project Wokwi:
+```toml
+[wokwi]
+version = 1
+author = "Your Name"
+title = "My Arduino Project"
+description = "Description of your project"
+
+[build]
+firmware = "sketch.ino"
+
+[env]
+SIMULATED = "1"
+```
+
+---
+
+## Mini Project: LED Berkedip
+
+Ini adalah project paling sederhana untuk memulai Arduino. LED akan berkedip setiap 1 detik.
+
+### Yang Dibutuhkan:
+- Arduino Uno (Simulasi Wokwi)
+- LED (warna bebas)
+- Resistor 220Ω (atau 470Ω)
+
+### Diagram Koneksi:
+```
+Arduino Pin 13 ──[220Ω Resistor]── LED (+) Pin
+LED (-) ── GND
+```
+
+### File: sketch_blink.ino
+
 ```cpp
-// Mechanical buttons membuat banyak false triggers
-// Solusi: tunggu 50ms untuk signal stabilizing
-```
-Lihat: `2_Button_Debounce.ino`
+/*
+ * Mini Project: LED Berkedip (Blink)
+ * Deskripsi: LED akan menyala dan mati secara bergantian setiap 1 detik
+ * Hardware: Arduino Uno + 1 LED + 1 Resistor 220Ω
+ */
 
----
+// Definisikan pin tempat LED terhubung
+#define LED_PIN 13      // LED terhubung ke pin 13 (Built-in LED)
 
-### 3. Analog Reading & PWM
-```cpp
-analogRead(pin)   // 0-1023 (baca tegangan)
-analogWrite(pin)  // 0-255 (kirim PWM untuk smooth control)
-map()             // Konversi antar range
-```
-Lihat: `3_Analog_Sensor_LDR.ino`
+// Setup - Berjalan sekali saat startup
+void setup() {
+  // Deklarasikan pin 13 sebagai OUTPUT
+  pinMode(LED_PIN, OUTPUT);
+  
+  // Mulai komunikasi Serial (opsional, untuk debugging)
+  Serial.begin(9600);
+  Serial.println("Program Blink dimulai!");
+}
 
----
-
-### 4. Library & Abstraction
-```cpp
-#include <Servo.h>
-Servo myServo;
-myServo.attach(9);
-myServo.write(angle);  // Library handle PWM complexity
-```
-Lihat: `4_Servo_Control.ino`
-
----
-
-### 5. State Machine Pattern
-```cpp
-enum State { STATE_OFF, STATE_ON, STATE_BLINK };
-// Clean way to manage multiple modes
-// Mudah diperluas & debug
-```
-Lihat: `5_Serial_StateMachine.ino`
-
----
-
-## 🔥 Common Mistakes (Jangan Sampai!)
-
-| ❌ Mistake | ✅ Correct | Alasan |
-|-----------|-----------|--------|
-| `while(1) { delay(...) }` | Gunakan `loop()` | Arduino `loop()` sudah infinite |
-| Lupa `pinMode()` | Selalu set di `setup()` | Pin mode default undefined |
-| `delay()` berlebihan | Gunakan `millis()` | Program jadi lambat & unresponsive |
-| Write ke pin undefined | Check pin number | Pin > 13 mungkin invalid |
-| Baca analog terlalu cepat | `delay(100)` antar read | ADC butuh waktu |
-| Lupa serial monitor setup | `Serial.begin(9600)` | Tidak bisa debug |
-
-Penjelasan lengkap: Lihat `1_ARDUINO_BASICS.md` section 10
-
----
-
-## 🛠️ Wokwi Setup (untuk simulasi)
-
-### Minimum Setup:
-1. Install VS Code Extension: **Wokwi Simulator**
-   - Ctrl+Shift+X → search "Wokwi" → Install
-
-2. Open folder Modul_Arduino di VS Code
-
-3. Navigate ke `3_WOKWI_PROJECTS/1_LED_Blink_Timer_diagram.json`
-
-4. File akan terbuka, click tombol **"Play"** di toolbar
-
-5. Lihat simulasi berjalan & serial output
-
-### Kalau tidak bisa:
-→ Lihat `WOKWI_TUTORIAL.md` section 2-7 untuk detail setup
-
----
-
-## 🎯 Challenge Projects
-
-Setelah selesai contoh, coba buat ini:
-
-### Challenge 1: Traffic Light System
-```
-- 3 LED (merah, kuning, hijau)
-- Berganti otomatis: merah 5s → kuning 2s → hijau 5s
-- Button untuk override (all off)
-
-Gunakan: state machine, non-blocking timer, button debounce
+// Loop - Berjalan terus-menerus
+void loop() {
+  // Nyalakan LED
+  digitalWrite(LED_PIN, HIGH);
+  Serial.println("LED: ON");
+  
+  // Tunggu 1 detik (1000 millisecond)
+  delay(1000);
+  
+  // Matikan LED
+  digitalWrite(LED_PIN, LOW);
+  Serial.println("LED: OFF");
+  
+  // Tunggu 1 detik
+  delay(1000);
+}
 ```
 
-### Challenge 2: Light Meter + Alert
-```
-- LDR sensor measure cahaya
-- LED terang/redup mengikuti cahaya
-- Buzzer beep jika terlalu gelap
-- Display status di Serial
+### Cara Menjalankan di Wokwi:
 
-Gunakan: analog read, PWM, threshold detection
-```
+1. **Buat folder project:**
+   ```bash
+   mkdir my_first_arduino
+   cd my_first_arduino
+   ```
 
-### Challenge 3: Servo Sweep dengan Button
-```
-- Button 1: sweep servo 0-180
-- Button 2: stop sweep
-- Potentiometer: manual control angle
-- Serial display current angle
+2. **Buat file `sketch.ino`** dengan isi kode di atas
 
-Gunakan: servo library, button debounce, multiple input
+3. **Buat file `diagram.json`** (lihat di folder project ini)
+
+4. **Di VS Code:**
+   - Buka folder project
+   - Tekan `Ctrl+Shift+P`
+   - Ketik: "Wokwi: Start Simulator"
+   - Simulator akan membuka dan LED akan berkedip!
+
+5. **Untuk melihat Serial Output:**
+   - Di Wokwi simulator, buka icon Serial Monitor atau "Serial" di preview
+   - Serial akan menampilkan "LED: ON" dan "LED: OFF"
+
+### Output yang Diharapkan:
+```
+Program Blink dimulai!
+LED: ON
+LED: OFF
+LED: ON
+LED: OFF
+... (terus berulang)
 ```
 
 ---
 
-## 📚 Referensi Tambahan
+## Konsep Penting yang Dipelajari
 
-- **Arduino Official:** https://www.arduino.cc/reference/
-- **Wokwi Components:** https://docs.wokwi.com/parts
-- **Simulator Online:** https://wokwi.com (version web)
+Dari mini project ini, Anda telah belajar:
 
----
-
-## 💻 Tips Menggunakan File `.ino`
-
-### Option 1: Di Arduino IDE
-```
-1. Download Arduino IDE dari arduino.cc
-2. Copy-paste code dari 2_EXAMPLE_CODES/*.ino
-3. Connect board via USB
-4. Verify & Upload
-```
-
-### Option 2: Di Wokwi Online
-```
-1. Buka wokwi.com
-2. Create new Arduino project
-3. Copy diagram.json dari 3_WOKWI_PROJECTS/
-4. Copy .ino code ke editor
-5. Simulasi!
-```
-
-### Option 3: Di VS Code + Wokwi Extension (Recommended)
-```
-1. Install Wokwi extension
-2. Buka folder Modul_Arduino
-3. Buka .json file dari 3_WOKWI_PROJECTS/
-4. Click Play
-5. Test & modify on the fly
-```
+1. Struktur program Arduino (setup & loop)
+2. Deklarasi PIN dan mode (`pinMode`)
+3. Kontrol digital output (`digitalWrite`)
+4. Timing (delay) (`delay`)
+5. Serial communication (`Serial.print`)
+6. Koneksi dasar (PIN ke LED ke GND)
 
 ---
 
-## 🤝 Kontribusi & Pertanyaan
+## Langkah Selanjutnya
 
-Jika Anda:
-- 🐛 Menemukan bug atau error di code
-- ❓ Punya pertanyaan tentang konsep
-- 💡 Punya improvement suggestion
-- 🎓 Membuat project epic dengan modul ini
+Setelah paham LED berkedip, coba:
 
-**Silakan dokumentasikan dan share!**
-
----
-
-## 📝 Checklist Pembelajaran
-
-- [ ] Baca `1_ARDUINO_BASICS.md` lengkap
-- [ ] Pahami konsep: setup(), loop(), pins
-- [ ] Pahami: digital vs analog
-- [ ] Pahami: non-blocking timing
-- [ ] Study code 1-5 secara urut
-- [ ] Test setiap code di Wokwi
-- [ ] Modifikasi & eksperimen sendiri
-- [ ] Pahami penjelasan di akhir setiap code
-- [ ] Complete minimal 2 challenge projects
-- [ ] Siap untuk hardware fisik! ✅
+1. **Modifikasi timing** - Ubah delay() menjadi 500ms atau 2000ms
+2. **Sensor Suara (Buzzer)** - Ganti LED dengan buzzer untuk output suara
+3. **Push Button** - Tambahkan button untuk control LED manual
+4. **Sensor Analog** - Gunakan sensor cahaya atau suhu
+5. **Motor DC** - Kontrol kecepatan motor dengan PWM
 
 ---
 
-**Selamat belajar! Happy coding! 🚀**
+## Resource Berguna
+
+- **Wokwi Official**: https://wokwi.com
+- **Arduino Official**: https://www.arduino.cc
+- **Arduino Reference**: https://www.arduino.cc/reference/en/
+- **Wokwi for VS Code Docs**: https://docs.wokwi.com/
 
 ---
 
-*Last Updated: February 2026*  
-*Version: 1.0*
